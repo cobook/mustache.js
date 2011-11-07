@@ -292,14 +292,17 @@ var Mustache = function() {
       return "";
     },
 
-    walk_context: function(name, context){
+    walk_context: function(name, context){     
       var path = name.split('.');
       // if the var doesn't exist in current context, check the top level context
       var value_context = (context[path[0]] != undefined) ? context : this.context;
       var value = value_context[path.shift()];
       while(value != undefined && path.length > 0){
-        value_context = value;
-        value = value[path.shift()];
+        name = path.shift();
+        if (name) {
+          value_context = value;
+          value = value[name];
+        }
       }
       // if the value is a function, call it, binding the correct context
       if(typeof value === "function") {
